@@ -16,7 +16,7 @@ contract Concert1 is ERC721URIStorage
     Counters.Counter private _tokenIds;
     Counters.Counter private _ticketsAvailable;
     uint256 initialPrice=0.0085 ether;
-    uint256 maxSupply=4;
+    uint256 maxSupply=10000;
     mapping(uint256 => ticketData) private ticketArray;
     struct ticketData{
         uint256 tokenID;
@@ -49,7 +49,7 @@ contract Concert1 is ERC721URIStorage
     );
 
 
-    function createToken(string memory tokenURI,uint artist_cut,uint256 price) public returns (int){
+    function createToken(string memory tokenURI,uint artist_cut,uint256 price) public returns (uint256){
         require(_tokenIds.current()<=maxSupply,"Tickets over");
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
@@ -57,7 +57,7 @@ contract Concert1 is ERC721URIStorage
         _setTokenURI(newTokenId, tokenURI);
         createTicket(newTokenId,price,artist_cut);
         _ticketsAvailable.increment();
-        return(int(newTokenId));
+        return((newTokenId));
     }
 
 
@@ -74,6 +74,7 @@ contract Concert1 is ERC721URIStorage
             price,
             false
         );
+        _transfer(msg.sender,address(this), tokenID);
         emit ticketCreated(
             tokenID,
             msg.sender,
