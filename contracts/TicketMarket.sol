@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract Concert1 is ERC721URIStorage
 {
     address payable owner;
-    
+    //Calls ERC721 constructor
     constructor() ERC721("Metaverse Tokens", "METT") {
         
         owner = payable(msg.sender);
@@ -18,6 +18,7 @@ contract Concert1 is ERC721URIStorage
     uint256 initialPrice=0.0085 ether;
     uint256 maxSupply=10000;
     mapping(uint256 => ticketData) private ticketArray;
+    //Stores the data in a ticket
     struct ticketData{
         uint256 tokenID;
         address payable original_owner;
@@ -28,7 +29,9 @@ contract Concert1 is ERC721URIStorage
         uint256 price;
         bool sold;
     }
-    function division(uint numerator, uint denominator) private
+
+    //Used for division of uint
+    function division(uint numerator, uint denominator) private pure
     returns(uint quotient) {
         uint precision =5;
         uint _numerator  = numerator * 10 ** (precision+1);
@@ -37,6 +40,7 @@ contract Concert1 is ERC721URIStorage
         return ( _quotient);
     }
 
+    //An event of a ticket being created
     event ticketCreated (
       uint256 indexed tokenId,
       address original_owner,
@@ -48,7 +52,7 @@ contract Concert1 is ERC721URIStorage
       bool sold
     );
 
-
+    //A function that creates the token inside the blockchain
     function createToken(string memory tokenURI,uint artist_cut,uint256 price) public returns (uint256){
         require(_tokenIds.current()<=maxSupply,"Tickets over");
         _tokenIds.increment();
@@ -61,7 +65,7 @@ contract Concert1 is ERC721URIStorage
     }
 
 
-
+    //A function that initializes the data for a token
     function createTicket(uint256 tokenID,uint256 price,uint artist_cut) private{
         require(price>0,"Price must be atleast 1 wei");
         ticketArray[tokenID]= ticketData(
@@ -86,7 +90,9 @@ contract Concert1 is ERC721URIStorage
             false
         );   
     }
-    function listTicketForSale(uint256 tokenID,uint256 price) public payable{
+
+    //function for listing the ticket for resale
+    function listTicketForSale(uint256 tokenID,uint256 price) public{
         require(ticketArray[tokenID].owner == msg.sender,"Only owner can list his ticket for sale");
         ticketArray[tokenID].sold = false;
         ticketArray[tokenID].price= price;
@@ -97,6 +103,8 @@ contract Concert1 is ERC721URIStorage
         
     }
 
+
+    //function to purchase the sale of a ticket
     function makeSale(uint256 tokenID) public payable{
         uint price=ticketArray[tokenID].price;
         address seller = ticketArray[tokenID].seller;
@@ -116,5 +124,65 @@ contract Concert1 is ERC721URIStorage
         else{
             payable(seller).transfer(price);
         }
+    }
+
+    //function to get all the tickets on the market
+    function getAvailableTickets() public view returns (ticketData[] memory){
+        uint total= _tokenIds.current();
+        uint available= _ticketsAvailable.current();
+        ticketData[] memory items = new ticketData[](available);
+        uint currentIdx=0;
+        for(uint i=0;i<total;i++){
+            if(ticketArray[i+1].owner==address(this)){
+                ticketData storage tempItm=ticketArray[i+1];
+                items[currentIdx]=tempItm;
+                currentIdx+=1;
+            }
+        }
+        return items;
+
+    }
+
+    //function to get all the tickets purchased by a user
+    function getMyTickets() public view returns (ticketData[] memory){
+        uint total= _tokenIds.current();
+        uint count = 0;
+        for (uint i = 0; i < total; i++) {
+            if (ticketArray[i + 1].owner == msg.sender) {
+                count += 1;
+            }
+        }
+        ticketData[] memory items = new ticketData[](count);
+        uint currentIdx=0;
+        for(uint i=0;i<total;i++){
+            if(ticketArray[i+1].owner==msg.sender){
+                ticketData storage tempItm=ticketArray[i+1];
+                items[currentIdx]=tempItm;
+                currentIdx+=1;
+            }
+        }
+        return items;
+    }
+
+
+    //function to get the tickets listed by a user
+    function getListedTickets() public view returns (ticketData[] memory){
+        uint total= _tokenIds.current();
+        uint count = 0;
+        for (uint i = 0; i < total; i++) {
+            if (ticketArray[i + 1].seller == msg.sender) {
+                count += 1;
+            }
+        }
+        ticketData[] memory items = new ticketData[](count);
+        uint currentIdx=0;
+        for(uint i=0;i<total;i++){
+            if(ticketArray[i+1].seller==msg.sender){
+                ticketData storage tempItm=ticketArray[i+1];
+                items[currentIdx]=tempItm;
+                currentIdx+=1;
+            }
+        }
+        return items;
     }
 }
