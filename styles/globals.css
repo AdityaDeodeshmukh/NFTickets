@@ -1,3 +1,4 @@
+
 html,
 body {
   padding: 0;
@@ -13,4 +14,114 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+.line {
+  background: linear-gradient(to right, rgba(204, 0, 255, 1) 50px,#0d1825 750px, rgba(204, 0, 255, 1) );
+  background-size: 100% 100%;
+  height: 2px;
+}
+
+
+i {
+  padding: 10px;
+}
+.card-body {
+  padding: 0.25rem;
+  background-color: #f2beff;
+}
+li {
+  padding: 10px;
+}
+.card {
+  border-radius: 7%;
+}
+
+h1 {
+  font-family: sans-serif;
+  margin: 50px auto;
+  color: #228b22;
+  text-align: center;
+  font-size: 40px;
+  max-width: 1200px;
+  font-weight: 500;
+  position: relative;
+}
+
+h1.landing:before {
+  content: "";
+  display: block;
+  width: 400px;
+  height: 10px;
+  background: #cc00ff;
+  left: -14%;
+  top: 40%;
+  position: absolute;
+}
+
+h1.landing:after {
+  content: "";
+  display: block;
+  width: 400px;
+  height: 10px;
+  background: #cc00ff;
+  right: -14%;
+  top: 40%;
+  position: absolute;
+}
+/* .gradient-custom {
+  background: linear-gradient(
+    180deg,
+    #0d1825 32.66%,
+    rgba(250, 13, 242, 0) 111.19%
+  );
+} */
+
+.gradient-custom {
+  background-image: linear-gradient(#0d1825 50%, rgba(175, 34, 170, 0.2) );
+}
+.im {
+  position: relative;
+  width: 60rem;
+  left: 4rem;
+  top: -15rem;
+}
+
+.container h3 {
+  color: #93d4ff;
+  font-size: 4rem;
+}
+h4 {
+  color: #93d4ff;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+/* 
+@tailwind base;
+@tailwind components;
+@tailwind utilities */
+
+.glass-panel {
+  color: #fff;
+  margin: 40px auto;
+  background-color: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  width: 100%;
+  border-radius: 15px;
+  padding: 32px;
+  backdrop-filter: blur(10px);
+  max-width: 600px;
 }

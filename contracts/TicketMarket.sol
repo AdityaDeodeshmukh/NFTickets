@@ -120,10 +120,21 @@ contract Concert1 is ERC721URIStorage
             uint256 seller_cut=price-artist_cut;
             payable(ticketArray[tokenID].original_owner).transfer(artist_cut);
             payable(seller).transfer(seller_cut);
+            ticketArray[tokenID].prev_price=price;
         } 
         else{
+            ticketArray[tokenID].prev_price=price;
             payable(seller).transfer(price);
         }
+    }
+
+    function cancelListing(uint256 tokenID) public{
+        require(msg.sender== ticketArray[tokenID].seller,"Only the seller can de-list the image");
+        ticketArray[tokenID].sold=true;
+        ticketArray[tokenID].seller=payable(address(0));
+        ticketArray[tokenID].owner = payable(msg.sender);
+        _ticketsAvailable.decrement();
+        _transfer(address(this),msg.sender,tokenID);
     }
 
     //function to get all the tickets on the market
