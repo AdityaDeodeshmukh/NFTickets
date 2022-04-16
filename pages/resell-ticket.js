@@ -47,8 +47,8 @@ export default function ResellTicket(){
   return(
     <div className="card gradient-custom" style={{minHeight: '1080px'}}>
         <NavBar></NavBar> <Line></Line>
-      <div>
-      <form className='form-container' style={{top:'40%'}}>
+      <div className='form-container'>
+      <form className='' style={{top:'40%'}}>
         <input
           placeholder="Asset Price in Eth"
           onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
@@ -58,10 +58,10 @@ export default function ResellTicket(){
             <img className="rounded mt-4" width="100" src={image} />
           )
         } <br/>
-        <button onClick={resell}>
-          List Ticket
-        </button>
         </form>
+        <button className='form-container' style={{position: 'relative',bottom:'60px', maxHeight:'50px'}} onClick={resell} >
+                    List
+            </button>
       </div>
   </div>
   )

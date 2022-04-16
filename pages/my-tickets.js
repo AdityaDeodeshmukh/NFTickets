@@ -91,6 +91,7 @@ export default function MyTickets() {
   <NavBar /> <Line></Line>
   <div className="card__circle card__circle1"></div>
   <div className="card__circle card__circle2"></div>
+  <h1 style={{color: 'white', padding: '15px'}}>My Tickets</h1>
   <div className="card__container bd-container">
     {
       tickets.map((ticket, i) => (
@@ -98,7 +99,6 @@ export default function MyTickets() {
       <img src={ticket.image} alt="" className="card__img" />
 
       <div className="card__data">
-        <h3 className="card__title">Sunburn</h3>
         <h5>Artist : {ticket.name}</h5>
         <span className="card__profession">{ticket.description}</span>
       </div>

@@ -76,6 +76,7 @@ export default function DashBoard(){
   <NavBar /> <Line></Line>
   <div className="card__circle card__circle1"></div>
   <div className="card__circle card__circle2"></div>
+  <h1 style={{color: 'white', padding: '15px'}}>DashBoard</h1>
   <div className="card__container bd-container">
     {
       tickets.map((ticket, i) => (
