@@ -8,6 +8,7 @@ import Image3 from "./pic3.png";
 import Image4 from "./pic4.png";
 import nftImg from "./logo_final.png";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { useRouter } from 'next/router'
 // import '../styles/globals.css'
 
 // function Image() {
@@ -49,13 +50,8 @@ function NavBar() {
             </a>
           </li>
           <li className="nav-item active">
-            <a className="nav-link" href="/create-ticket">
-              Create
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="/ticket-place">
-              Buy Now
+            <a className="nav-link" href="/dashboard">
+              Dashboard
             </a>
           </li>
           <li className="nav-item" style={{ marginRight: "15px" }}>
@@ -103,89 +99,49 @@ function MenuBar() {
 const eventList = [
     {
       id: "1",
-      name: "Event 1",
-      description: "This is the first event",
+      name: "The Weeknd",
+      description: "Weeknd Concert",
       image: Image1,
-      date: "2020-01-01",
-      location: "Location 1",
-      price: "100",
-      tickets: "100",
+      date: "2022-07-15",
+      location: "New York",
+      artcode:"WKND"
     },
     {
       id: "2",
-      name: "Event 2",
-      description: "This is the second event",
+      name: "Panic! at the Disco",
+      description: "PATD Concert",
       image: Image2,
-      date: "2020-01-02",
-      location: "Location 2",
-      price: "200",
-      tickets: "200",
+      date: "2023-01-02",
+      location: "Delhi",
+      artcode:"PATD"
     },
     {
       id: "3",
-      name: "Event 2",
-      description: "This is the second event",
+      name: "Taylor Swift",
+      description: "Taylor Swift Concert",
       image: Image3,
-      date: "2020-01-02",
-      location: "Location 2",
-      price: "200",
-      tickets: "200",
+      date: "2022-12-30",
+      location: "Mumbai",
+      artcode:"TLSW"
+      
     },
     {
       id: "4",
-      name: "Event 2",
-      description: "This is the second event",
+      name: "Ed Sheeran",
+      description: "Ed Sheeran Concert",
       image: Image4,
-      date: "2020-01-02",
-      location: "Location 2",
-      price: "200",
-      tickets: "200",
+      date: "2023-02-02",
+      location: "Los Angeles",
+      artcode:"EDSH"
     },
-    {
-      id: "5",
-      name: "Event 2",
-      description: "This is the second event",
-      image: Image3,
-      date: "2020-01-02",
-      location: "Location 2",
-      price: "200",
-      tickets: "200",
-    },
-    {
-      id: "6",
-      name: "Event 2",
-      description: "This is the second event",
-      image: Image2,
-      date: "2020-01-02",
-      location: "Location 2",
-      price: "200",
-      tickets: "200",
-    },
-    {
-      id: "7",
-      name: "Event 2",
-      description: "This is the second event",
-      image: Image3,
-      date: "2020-01-02",
-      location: "Location 2",
-      price: "200",
-      tickets: "200",
-    },
-    {
-      id: "8",
-      name: "Event 2",
-      description: "This is the second event",
-      image: Image1,
-      date: "2020-01-02",
-      location: "Location 2",
-      price: "200",
-      tickets: "200",
-    }
   ];
 
 function UpcomingEvents() {
+  let ticketLink = "/ticket-place?artcode=";
+  const router = useRouter() 
   return (
     <div className="upcomingEvents">
+      
       <div className="container p-5">
         <br />
         <center>
@@ -197,7 +153,7 @@ function UpcomingEvents() {
           {eventList.map((event) => (
             <div className="col-sm-3 mb-4">
               <div className=''>
-                <a href="">
+                <a onClick={() => {router.push(`/ticket-place?artcode=${event.artcode}`)}} style={{cursor: 'pointer'}}>
                   <Image className="card" style={{borderRadius: 20}} src={event.image} alt="" />
                   <div className='card-overlay' style={{color: '#fff',
   margin: '40px auto',
@@ -215,12 +171,6 @@ function UpcomingEvents() {
                         {event.date} at {event.location}
                       </small>
                     </p>
-                    <p className="card-text">
-                      <small className="text">
-                        {event.price} ETH - {event.tickets} tickets
-                      </small>
-                    </p>
-                    
                   </div>
                 </a>
               </div>

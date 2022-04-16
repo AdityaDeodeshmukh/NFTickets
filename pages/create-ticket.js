@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
 import Web3Modal from 'web3modal'
+import { NavBar, Line } from '.'
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
@@ -14,7 +15,7 @@ import TicketMarket from '../artifacts/contracts/TicketMarket.sol/Concert1.json'
 
 export default function CreateTicket() {
     const [fileUrl, setFileUrl] = useState(null)
-    const [formInput, updateFormInput] = useState({ price: '', name: '', description: '' })
+    const [formInput, updateFormInput] = useState({ price: '', name: '', artcode: '', description: '' })
     const router = useRouter()
 
     async function onChange(e) {
@@ -33,11 +34,11 @@ export default function CreateTicket() {
         }
     }
     async function uploadToIPFS() {
-        const { name, description, price } = formInput
-        if (!name || !description || !price || !fileUrl) return
+        const { name, description, artcode, price } = formInput
+        if (!name || !description || !price || !artcode || !fileUrl) return
         /* first, upload to IPFS */
         const data = JSON.stringify({
-            name, description, image: fileUrl
+            name, description, artcode, image: fileUrl
         })
         try {
             const added = await client.add(data)
@@ -58,45 +59,52 @@ export default function CreateTicket() {
 
         const price = ethers.utils.parseUnits(formInput.price, 'ether')
         let contract = new ethers.Contract(ticketMarketAddress, TicketMarket.abi, signer)
-        let transaction = await contract.createToken(url, 20, price);
+        let transaction = await contract.createToken(url, 50, price);
         await transaction.wait()
         // console.log(transaction);
 
-        router.push('/ticket-place')
+        router.push('/')
     }
 
     return (
-        <div className="flex justify-center">
-            <div className="w-1/2 flex flex-col pb-12">
+
+        <div className="card gradient-custom" style={{minHeight: '1080px'}}>
+            <NavBar /> <Line></Line>
+            <div className="form-container">
+                <form className=''>
                 <input
-                    placeholder="Asset Name"
-                    className="mt-8 border rounded p-4"
+                    placeholder="Artist Name" 
                     onChange={e => updateFormInput({ ...formInput, name: e.target.value })}
-                />
+                /><br/>
                 <textarea
-                    placeholder="Asset Description"
-                    className="mt-2 border rounded p-4"
+                    placeholder="Concert Description"
                     onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
+                /><br/><br/>
+                <input 
+                    placeholder='Artist Code'
+                    onChange={e => updateFormInput({ ...formInput, artcode: e.target.value })}
                 />
                 <input
-                    placeholder="Asset Price in Eth"
-                    className="mt-2 border rounded p-4"
+                    placeholder="Ticket Price in Eth"
                     onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
-                />
+                /><br/>
                 <input
                     type="file"
                     name="Asset"
-                    className="my-4"
                     onChange={onChange}
-                />
+                /><br/>
                 {
                     fileUrl && (
-                        <img className="rounded mt-4" width="350" src={fileUrl} />
+                        <img className="rounded mt-4" width="100" src={fileUrl} />
                     )
                 }
-                <button onClick={listNewTicketForSale} className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg">
-                    Create NFT
-                </button>
+                <br/>
+                <br />
+                <br />
+                </form>
+            <button className='form-container' style={{position: 'relative',bottom:'60px', maxHeight:'50px'}} onClick={listNewTicketForSale} >
+                    Create Ticket
+            </button>
             </div>
         </div>
     )

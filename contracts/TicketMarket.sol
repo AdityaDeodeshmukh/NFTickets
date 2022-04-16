@@ -31,13 +31,21 @@ contract Concert1 is ERC721URIStorage
     }
 
     //Used for division of uint
-    function division(uint numerator, uint denominator) private pure
-    returns(uint quotient) {
-        uint precision =5;
-        uint _numerator  = numerator * 10 ** (precision+1);
-        // with rounding of last digit
-        uint _quotient =  ((_numerator / denominator) + 5) / 10;
-        return ( _quotient);
+    function division(uint256 profit) private pure
+    returns(uint256 cut) {
+        if(profit < 0.25 ether){
+            cut=0 ether;
+        }
+        else if(profit>=0.25 ether && profit<1 ether){
+            cut=0.1 ether;
+        }
+        else if(profit>1 ether && profit < 5 ether){
+            cut=0.5 ether;
+        }
+        else{
+            cut=profit-(0.5 ether);
+        }
+        
     }
 
     //An event of a ticket being created
@@ -106,7 +114,7 @@ contract Concert1 is ERC721URIStorage
 
     //function to purchase the sale of a ticket
     function makeSale(uint256 tokenID) public payable{
-        uint price=ticketArray[tokenID].price;
+        uint256 price=ticketArray[tokenID].price;
         address seller = ticketArray[tokenID].seller;
         require(msg.value == price,"Pay the price that has been asked");
         ticketArray[tokenID].sold=true;
@@ -114,9 +122,9 @@ contract Concert1 is ERC721URIStorage
         ticketArray[tokenID].owner = payable(msg.sender);
         _ticketsAvailable.decrement();
         _transfer(address(this),msg.sender,tokenID);
-        int profit = int(price)-int(ticketArray[tokenID].prev_price);
-        if(profit > 0){
-            uint256 artist_cut=division(uint(profit)*uint(ticketArray[tokenID].perc_cut), 100);
+        uint256 profit = price-ticketArray[tokenID].prev_price;
+        if(price > ticketArray[tokenID].prev_price){
+            uint256 artist_cut=division(uint256(profit));
             uint256 seller_cut=price-artist_cut;
             payable(ticketArray[tokenID].original_owner).transfer(artist_cut);
             payable(seller).transfer(seller_cut);
